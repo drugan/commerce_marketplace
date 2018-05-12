@@ -8,7 +8,6 @@ dependencies:
     - commerce
     - commerce_marketplace
     - commerce_product
-    - system
     - user
 id: commerce_marketplace_administer_products
 label: 'Administer Products'

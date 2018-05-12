@@ -11,7 +11,6 @@ dependencies:
     - commerce_marketplace
     - commerce_product
     - commerce_store
-    - system
     - user
 id: commerce_marketplace_administer_stores
 label: 'Administer Stores'
@@ -1870,10 +1869,10 @@ display:
           entity_type: commerce_store
           entity_field: prices_include_tax
           plugin_id: field
-        billing_countries:
-          id: billing_countries
+        billing_countries_value:
+          id: billing_countries_value
           table: commerce_store__billing_countries
-          field: billing_countries
+          field: billing_countries_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -1941,10 +1940,10 @@ display:
           entity_type: commerce_store
           entity_field: billing_countries
           plugin_id: field
-        tax_registrations:
-          id: tax_registrations
+        tax_registrations_value:
+          id: tax_registrations_value
           table: commerce_store__tax_registrations
-          field: tax_registrations
+          field: tax_registrations_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -2611,10 +2610,10 @@ display:
           entity_type: commerce_store
           entity_field: prices_include_tax
           plugin_id: field
-        billing_countries:
-          id: billing_countries
+        billing_countries_value:
+          id: billing_countries_value
           table: commerce_store__billing_countries
-          field: billing_countries
+          field: billing_countries_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -2655,9 +2654,9 @@ display:
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
-          empty: 'All countries'
-          hide_empty: true
-          empty_zero: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: commerce_marketplace_list_compact
@@ -2682,10 +2681,10 @@ display:
           entity_type: commerce_store
           entity_field: billing_countries
           plugin_id: field
-        tax_registrations:
-          id: tax_registrations
+        tax_registrations_value:
+          id: tax_registrations_value
           table: commerce_store__tax_registrations
-          field: tax_registrations
+          field: tax_registrations_value
           relationship: none
           group_type: group
           admin_label: ''
@@ -2726,9 +2725,9 @@ display:
           element_wrapper_type: ''
           element_wrapper_class: ''
           element_default_classes: true
-          empty: 'All countries'
-          hide_empty: true
-          empty_zero: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
           hide_alter_empty: true
           click_sort_column: value
           type: commerce_marketplace_list_compact
