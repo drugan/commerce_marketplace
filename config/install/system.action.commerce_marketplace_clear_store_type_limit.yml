@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_store
+id: commerce_marketplace_clear_store_type_limit
+label: 'Clear store type limit'
+type: commerce_store
+plugin: commerce_marketplace_clear_store_type_limit
+configuration: {  }

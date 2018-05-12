@@ -1,0 +1,7 @@
+commerce_cart.page:
+  path: '/cart'
+  defaults:
+    _controller: '\Drupal\commerce_marketplace\Controller\MarketplaceCartController::cartPage'
+    _title: 'Shopping carts'
+  requirements:
+    _permission: 'access cart'

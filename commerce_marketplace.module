@@ -1,0 +1,197 @@
+<?php
+
+/**
+ * @file
+ * Contains commerce_marketplace.module.
+ */
+use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\commerce_store\Entity\StoreInterface;
+use Drupal\commerce_marketplace\MarketplaceStorage;
+use Drupal\commerce_marketplace\Form\MarketplaceForm;
+use Drupal\commerce_marketplace\MarketplaceEntityTypeInfo;
+use Drupal\commerce_marketplace\Form\MarketplaceProductForm;
+use Drupal\commerce_marketplace\Form\MarketplaceAddToCartForm;
+use Drupal\commerce_marketplace\MarketplaceAccessControlHandler;
+use Drupal\commerce_marketplace\MarketplaceEntityPermissionProvider;
+use Drupal\commerce_marketplace\MarketplaceTypeAccessControlHandler;
+use Drupal\commerce_marketplace\MarketplaceProductAccessControlHandler;
+use Drupal\commerce_marketplace\MarketplaceCurrencyAccessControlHandler;
+use Drupal\commerce_marketplace\MarketplaceProductTypeAccessControlHandler;
+use Drupal\commerce_marketplace\Plugin\views\argument_default\MarketplaceUser;
+
+/**
+ * Implements hook_help().
+ */
+function commerce_marketplace_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the commerce_marketplace module.
+    case 'help.page.commerce_marketplace':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Implements multiple stores/store owners model.') . '</p>';
+
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function commerce_marketplace_theme() {
+  $variables = [
+    'variables' => [
+      'settings' => [],
+      'content' => [],
+    ],
+  ];
+
+  return [
+    'commerce_marketplace_details_compact' => $variables,
+    'commerce_marketplace_name' => $variables,
+    'commerce_marketplace_type_label' => $variables,
+  ];
+}
+
+/**
+ * Implements hook_entity_type_alter().
+ */
+function commerce_marketplace_entity_type_alter(array &$entity_types) {
+  /** @var \Drupal\Core\Entity\EntityTypeInterface[] $entity_types */
+  $entity_types['commerce_store']->setStorageClass(MarketplaceStorage::class);
+  $entity_types['commerce_store']->setFormClass('add', MarketplaceForm::class);
+  $entity_types['commerce_store']->setFormClass('edit', MarketplaceForm::class);
+  $entity_types['commerce_store']->setFormClass('default', MarketplaceForm::class);
+  $entity_types['commerce_store']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
+  $entity_types['commerce_store']->setAccessClass(MarketplaceAccessControlHandler::class);
+  $entity_types['commerce_store_type']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
+  $entity_types['commerce_store_type']->setAccessClass(MarketplaceTypeAccessControlHandler::class);
+  $entity_types['commerce_product']->setFormClass('add', MarketplaceProductForm::class);
+  $entity_types['commerce_product']->setFormClass('edit', MarketplaceProductForm::class);
+  $entity_types['commerce_product']->setFormClass('default', MarketplaceProductForm::class);
+  $entity_types['commerce_product']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
+  $entity_types['commerce_product']->setAccessClass(MarketplaceProductAccessControlHandler::class);
+  $entity_types['commerce_product_type']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
+  $entity_types['commerce_product_type']->setAccessClass(MarketplaceProductTypeAccessControlHandler::class);
+  $entity_types['commerce_currency']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
+  $entity_types['commerce_currency']->setAccessClass(MarketplaceCurrencyAccessControlHandler::class);
+  $entity_types['commerce_order_item']->setFormClass('add_to_cart', MarketplaceAddToCartForm::class);
+
+}
+
+/**
+ * Implements hook_views_plugins_argument_default_alter().
+ */
+function commerce_marketplace_views_plugins_argument_default_alter(array &$plugins) {
+  $plugins['user']['class'] = MarketplaceUser::class;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function commerce_marketplace_form_commerce_store_gateways_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $store = \Drupal::routeMatch()->getParameter('commerce_store');
+  if ($store instanceof StoreInterface) {
+    $form['#title'] = $store->getName();
+  }
+}
+
+/**
+ * Implements hook_local_tasks_alter().
+ */
+function commerce_marketplace_local_tasks_alter(&$local_tasks) {
+  // Insert tab provided by the commerce_store_gateways module at the left of
+  // store/ID/products tab.
+  if (isset($local_tasks['commerce_store_gateways.manage'])) {
+    $local_tasks['commerce_store_gateways.manage']['base_route'] = 'entity.commerce_store.canonical';
+    $local_tasks['commerce_store_gateways.manage']['weight'] = 3;
+  }
+  if (isset($local_tasks['entity.commerce_store.edit_form'])) {
+    $local_tasks['entity.commerce_store.edit_form']['base_route'] = 'entity.commerce_store.canonical';
+    $local_tasks['entity.commerce_store.edit_form']['weight'] = 1;
+  }
+}
+
+/**
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function commerce_marketplace_form_commerce_store_type_form_alter(array &$form, FormStateInterface $form_state) {
+  /** @var \Drupal\commerce_store\Entity\StoreTypeInterface $store_type */
+  $store_type = $form_state->getFormObject()->getEntity();
+  $storage = \Drupal::entityManager()->getStorage('commerce_store');
+
+  $form['marketplace_limit'] = [
+    '#type' => 'number',
+    '#step' => 1,
+    '#min' => 0,
+    '#weight' => 1,
+    '#title' => t('The maximum stores'),
+    '#description' => t('Limit the number of stores of this type allowed to create by one user. Once a store is created this number could be overriden on a store edit form for each store owner individually. Leave 0 for unlimited.'),
+    '#default_value' => $storage->getStoreLimit($store_type->id()) ?: 0,
+  ];
+  $form['actions']['submit']['#submit'][] = 'commerce_marketplace_commerce_store_type_form_submit';
+}
+
+/**
+ * Submit handler for the commerce_store_type form.
+ */
+function commerce_marketplace_commerce_store_type_form_submit(array $form, FormStateInterface $form_state) {
+  $limit = $form_state->getValues()['marketplace_limit'];
+  if ($limit == $form['marketplace_limit']['#default_value']) {
+    return;
+  }
+  /** @var \Drupal\commerce_store\Entity\StoreTypeInterface $store_type */
+  $store_type = $form_state->getFormObject()->getEntity();
+  $storage = \Drupal::entityManager()->getStorage('commerce_store');
+  $storage->setStoreLimit($store_type->id(), $limit ?: 0);
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function commerce_marketplace_entity_delete(EntityInterface $entity) {
+  if ($entity instanceof StoreInterface) {
+    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $store_type = [
+      'delete' => TRUE,
+      'store_type' => $entity->bundle(),
+    ];
+    $storage->clearStoreLimit($store_type, $entity->getOwnerId());
+  }
+  elseif ($entity instanceof AccountInterface) {
+    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $store_type = [
+      'delete' => TRUE,
+    ];
+    $storage->clearStoreLimit($store_type, $entity->id());
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete().
+ */
+function commerce_marketplace_commerce_store_type_delete(EntityInterface $entity) {
+  if ($store_type = $entity->id()) {
+    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $store_type = [
+      'delete' => TRUE,
+      'store_type' => $store_type,
+    ];
+    $storage->clearStoreLimit($store_type);
+  }
+}
+
+/**
+ * Implements hook_entity_operation().
+ */
+function commerce_marketplace_entity_operation(EntityInterface $entity) {
+  if ($entity instanceof StoreInterface) {
+    return \Drupal::service('class_resolver')
+      ->getInstanceFromDefinition(MarketplaceEntityTypeInfo::class)
+      ->entityOperation($entity);
+  }
+}

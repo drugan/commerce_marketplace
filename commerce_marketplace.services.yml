@@ -1,0 +1,6 @@
+services:
+  commerce_marketplace.product_store_resolver:
+    class: Drupal\commerce_marketplace\Resolver\MarketplaceProductDefaultStoreResolver
+    arguments: ['@current_route_match', '@entity.manager']
+    tags:
+      - { name: commerce_store.store_resolver }

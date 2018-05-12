@@ -1,0 +1,35 @@
+{#
+/**
+ * @file
+ * Theme override for a store type name.
+ *
+ * Available variables:
+ * - settings: The settings for the container.
+ *   - global: The text label for a global store type limit.
+ *   - owner: The text label for an owner's store type limit.
+ * - content: The array of the following elements:
+ *   - type: The store name item type.
+ *   - title: The name of a store.
+ *   - url: The Url object for the store's name.
+ *
+ * The formatter might be used in views to display both the global and owner's
+ * store type limit.
+ */
+#}
+{% set global_class = settings.global ? ' marketplace__label--global-limit' : '' %}
+{% set owner_class = settings.owner ? ' marketplace__label--owner-limit' : '' %}
+<div class="marketplace">
+  {% if settings.global %}
+  <span class="marketplace__global-limit marketplace--meta-data">
+    {{ settings.global }}
+  </span>
+  {% endif %}
+  <div{{ attributes.setAttribute('class', 'marketplace__label' ~ global_class ~ owner_class) }}>
+    {{ content.type == "link" ? link(content.title, content.url) : content.title }}
+  </div>
+  {% if settings.owner %}
+  <span class="marketplace__owner-limit marketplace--meta-data">
+    {{ settings.owner }}
+  </span>
+  {% endif %}
+</div>

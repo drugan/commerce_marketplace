@@ -1,0 +1,69 @@
+{#
+/**
+ * @file
+ * Theme override for an entity reference or list item label.
+ *
+ * Available variables:
+ * - settings: settings for the container.
+ *   - link: boolean, whether a label should be referenced to the entity.
+ *   - summary: The detail's element summary content.
+ *   - open: boolean, whether details element should be expanded by default.
+ *   - empty: The placeholder for an empty list.
+ *   - list: The type of list element. Possible values: ul, ol, simple.
+ *   - separator: The string to separate simple list elements.
+ *   - attributes: HTML attributes for the list element.
+ *   - max: The maximum list items to display. Handled by the formatter class.
+ *   - offset: The item to start display from. Handled by the formatter class.
+ * - content: The array of AttributeArray objects having properties:
+ *   - #type: The list item type.
+ *   - #title: The title for a label linked to content.
+ *   - #url: The Url object for a label linked to content.
+ *   - #plain_text: The text content for a plain text label.
+ *
+ * The formatter might be used for any referenced entity or list (interger,
+ * float or string), both in views and entity display.
+ */
+#}
+<div class="marketplace">
+  {% if content[1]  %}
+  <details class="marketplace__compact-details" {{ settings.open == "1" ? "open" : "" }}>
+    <summary class="marketplace__compact-summary">
+      <span class="marketplace__compact-switcher"></span>
+      {{ settings.summary|raw }}
+    </summary>
+    {% if settings.list != "simple" %}
+    <{{ settings.list }} class="marketplace__compact-list">
+      {% for label in content %}
+        <li class="marketplace__compact-list-item">
+          {{- label['#type'] == "link" ? link(label['#title'], label['#url']) : label['#plain_text']|striptags -}}
+        </li>
+      {% endfor %}
+    </{{ settings.list }}>
+    {% else %}
+    <div class="marketplace__compact-list">
+      {% set the_last = content|last %}
+      {% set str = settings.separator['#markup'] %}
+      {% for label in content %}
+      <span class="marketplace__compact-list-item">
+        {{ label['#type'] == "link" ? link(label['#title'], label['#url']) : label['#plain_text'] }}{{ label == the_last ? "" : str|raw }}
+      </span>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </details>
+  {% elseif content[0] %}
+  {% set label = content[0] %}
+  <div class="marketplace__compact-list">
+    {% if settings.total > 1 %}
+    <summary class="marketplace__compact-summary">{{ settings.summary|raw }}</summary>
+    {% endif %}
+    <span class="marketplace__compact-list-item">
+      {{ label['#type'] == "link" ? link(label['#title'], label['#url']) : label['#plain_text'] }}
+    </span>
+  </div>
+  {% else %}
+  <div class="marketplace__compact-list-item">
+    {{- settings.empty -}}
+  </div>
+  {% endif %}
+</div>

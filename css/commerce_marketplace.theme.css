@@ -1,0 +1,74 @@
+/**
+ * @file
+ * Default theme implementation for Commerce Marketplace components
+ *
+ */
+
+
+.marketplace {
+  --green: green;
+  --red: red;
+  --black: black;
+}
+
+.marketplace__label {
+  font-weight: bold;
+  padding: 0 5px;
+}
+
+.marketplace__label--global-default {
+  border-top: 2px solid var(--red);
+}
+
+.marketplace__label--owner-default {
+  border-bottom: 2px solid var(--green);
+}
+
+.marketplace--meta-data {
+  font-size: 80%;
+}
+
+.marketplace__global-default::before,
+.marketplace__owner-default::after {
+  content: '√';
+  font-size: 150%;
+  font-weight: bold;
+}
+
+.marketplace__global-default::before {
+  color: var(--red);
+}
+
+.marketplace__owner-default::after {
+  color: var(--green);
+}
+
+.marketplace__owner-default {
+  float: right;
+}
+
+.marketplace__compact-details .marketplace__compact-list {
+  margin: .1em 1em;
+}
+
+.marketplace__compact-summary {
+  min-height: 2.2em;
+}
+
+.marketplace__compact-details[open] .marketplace__compact-switcher::after,
+.marketplace__compact-details .marketplace__compact-switcher::after {
+  font-weight: bolder;
+  color: var(--black);
+  /* Should be synced with .marketplace__compact-summary min-height value. */
+  font-size: 2em;
+  float: right;
+  line-height: initial;
+}
+
+.marketplace__compact-details[open] .marketplace__compact-switcher::after {
+  content: "ˆ";
+}
+
+.marketplace__compact-details .marketplace__compact-switcher::after {
+  content: "ˇ";
+}

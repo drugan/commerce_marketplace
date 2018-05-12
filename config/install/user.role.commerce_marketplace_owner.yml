@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies: {  }
+id: commerce_marketplace_owner
+label: 'Marketplace owner'
+is_admin: null
+permissions:
+  - 'access cart'
+  - 'access checkout'
+  - 'access comments'
+  - 'access content'
+  - 'access site-wide contact form'
+  - 'search content'
+  - 'view own customer profile'
+  - 'view commerce_store'
+  - 'view commerce_product'
+  - 'view own unpublished commerce_product'
+  - 'view own commerce_order'
+  - 'manage own commerce_payment_method'

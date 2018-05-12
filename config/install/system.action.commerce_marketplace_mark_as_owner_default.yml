@@ -1,0 +1,10 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - commerce_store
+id: commerce_marketplace_mark_as_owner_default
+label: 'Mark as owner default store'
+type: commerce_store
+plugin: commerce_marketplace_mark_as_owner_default
+configuration: {  }

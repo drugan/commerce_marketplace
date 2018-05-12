@@ -1,0 +1,9 @@
+{
+  "name": "drupal/commerce_marketplace",
+  "type": "drupal-module",
+  "description": "Implements multiple stores/store owners model.",
+  "license": "GPL-2.0+",
+  "homepage": "https://www.drupal.org/project/commerce_marketplace",
+  "minimum-stability": "dev",
+  "require": { }
+}

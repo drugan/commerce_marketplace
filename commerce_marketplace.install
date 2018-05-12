@@ -1,0 +1,127 @@
+<?php
+
+/**
+ * @file
+ * Install and uninstall functions for the commerce_marketplace module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function commerce_marketplace_install() {
+  // Disable default Stores view.
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    $config = \Drupal::configFactory();
+    $views = [
+      'views.view.commerce_stores',
+      'views.view.commerce_products',
+    ];
+
+    foreach ($views as $configuration) {
+      $view = $config->getEditable($configuration);
+      if ($view) {
+        $view->set('status', FALSE);
+        $view->save();
+      }
+    }
+  }
+
+  $entity_manager = \Drupal::entityManager();
+  $store_types = array_keys($entity_manager->getStorage('commerce_store_type')->loadMultiple());
+  $product_types = array_keys($entity_manager->getStorage('commerce_product_type')->loadMultiple());
+
+  if ($role = user_role_load('commerce_marketplace_owner')) {
+    $permissions = $role->getPermissions();
+    // Add crud permissions for all existing store types.
+    foreach ($store_types as $store_type) {
+      $permissions[] = "create {$store_type} commerce_store";
+      $permissions[] = "update own {$store_type} commerce_store";
+      // @todo Should be a regular store owner allowed to delete own store?
+      // $permissions[] = "delete own {$store_type} commerce_store";
+    }
+
+    // Add crud permissions for all existing product types.
+    foreach ($product_types as $product_type) {
+      $permissions[] = "create {$product_type} commerce_product";
+      $permissions[] = "update own {$product_type} commerce_product";
+      $permissions[] = "delete own {$product_type} commerce_product";
+    }
+
+    $role->set('permissions', array_unique($permissions));
+    $role->save();
+  }
+
+  // Add marketplace owner permissions to admin's permissions.
+  if ($role && $admin_role = user_role_load('commerce_marketplace_admin')) {
+    $permissions = $admin_role->getPermissions();
+    $owner_permissions = $role->getPermissions();
+
+    foreach ($store_types as $store_type) {
+      $permissions[] = "delete own {$store_type} commerce_store";
+      $permissions[] = "delete any {$store_type} commerce_store";
+      $permissions[] = "update any {$store_type} commerce_store";
+    }
+
+    foreach ($product_types as $product_type) {
+      $permissions[] = "update any {$product_type} commerce_product";
+      $permissions[] = "delete any {$product_type} commerce_product";
+    }
+
+    $permissions = array_merge($permissions, $owner_permissions);
+    $admin_role->set('permissions', array_unique($permissions));
+    $admin_role->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function commerce_marketplace_uninstall() {
+  // Make some clean up after ourselves.
+  if ($role = user_role_load('commerce_marketplace_owner')) {
+    $role->delete();
+  }
+  if ($role = user_role_load('commerce_marketplace_admin')) {
+    $role->delete();
+  }
+
+  $config = \Drupal::configFactory();
+  $configurations = [
+    'commerce_marketplace.settings',
+    'field.formatter.settings.commerce_marketplace_name',
+    'field.formatter.settings.commerce_marketplace_type_label',
+    'field.formatter.settings.commerce_marketplace_label_compact',
+    'field.formatter.settings.commerce_marketplace_list_compact',
+    'system.action.commerce_marketplace_mark_as_default',
+    'system.action.commerce_marketplace_mark_as_owner_default',
+    'system.action.commerce_marketplace_increase_owner_limit_by_one',
+    'system.action.commerce_marketplace_increase_store_limit_by_one',
+    'system.action.commerce_marketplace_set_owner_limit_to_one',
+    'system.action.commerce_marketplace_set_store_limit_to_one',
+    'system.action.commerce_marketplace_clear_owner_store_limit',
+    'system.action.commerce_marketplace_clear_store_type_limit',
+    'views.view.commerce_marketplace_administer_stores',
+    'views.view.commerce_marketplace_administer_products',
+  ];
+
+  foreach ($configurations as $name) {
+    if ($configuration = $config->getEditable($name)) {
+      $configuration->delete();
+    }
+  }
+
+  if (\Drupal::moduleHandler()->moduleExists('views')) {
+    $views = [
+      'views.view.commerce_stores',
+      'views.view.commerce_products',
+    ];
+
+    foreach ($views as $configuration) {
+      $view = $config->getEditable($configuration);
+      if ($view) {
+        $view->set('status', TRUE);
+        $view->save();
+      }
+    }
+  }
+}

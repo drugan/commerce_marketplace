@@ -1,0 +1,11 @@
+view.commerce_marketplace_stores.add_page:
+  route_name: entity.commerce_store.add_page
+  title: 'Add store'
+  appears_on:
+    - view.commerce_marketplace_administer_stores.user_stores_page
+
+view.commerce_marketplace_store_products.add_page:
+  route_name: entity.commerce_product.add_page
+  title: 'Add product'
+  appears_on:
+    - view.commerce_marketplace_administer_stores.products_page
