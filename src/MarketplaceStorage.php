@@ -219,7 +219,7 @@ class MarketplaceStorage extends StoreStorage {
     $uid = FALSE;
 
     if (!$user->hasPermission($this->entityType->getAdminPermission())) {
-      $uid = $user->hasPermission('view commerce_store') ? $user->id() : 0;
+      $uid = in_array('commerce_marketplace_owner', $user->getRoles()) ? $user->id() : 0;
     }
 
     return $uid;
