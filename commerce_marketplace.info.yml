@@ -5,6 +5,7 @@ core: 8.x
 package: Commerce (contrib)
 dependencies:
   - commerce:commerce_product
+  - commerce:commerce_tax
 config_devel:
   install:
     - user.role.commerce_marketplace_owner
