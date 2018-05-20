@@ -41,6 +41,9 @@ class MarketplaceStorage extends StoreStorage {
         $store = end($stores);
       }
     }
+    else {
+      $stores = parent::loadMultiple();
+    }
 
     if (!$default && isset($store)) {
       // This is the case when previously assigned default store was
@@ -50,6 +53,10 @@ class MarketplaceStorage extends StoreStorage {
       if (count($stores) > 1) {
         drupal_set_message(t('No one default store is assigned yet. Note that it is recommended to have one explicitly assigned otherwise the last found store will be dimmed as the default. This may lead to unexpected behaviour.'), 'warning', FALSE);
       }
+    }
+    elseif (!$default && $stores) {
+      // As a last resort let's return the first store in the list.
+      $default = reset($stores);
     }
 
     return $default;
