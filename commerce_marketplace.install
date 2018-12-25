@@ -29,6 +29,7 @@ function commerce_marketplace_install() {
   $entity_manager = \Drupal::entityManager();
   $store_types = array_keys($entity_manager->getStorage('commerce_store_type')->loadMultiple());
   $product_types = array_keys($entity_manager->getStorage('commerce_product_type')->loadMultiple());
+  $variation_types = array_keys($entity_manager->getStorage('commerce_product_variation_type')->loadMultiple());
 
   if ($role = user_role_load('commerce_marketplace_owner')) {
     $permissions = $role->getPermissions();
@@ -43,8 +44,14 @@ function commerce_marketplace_install() {
     // Add crud permissions for all existing product types.
     foreach ($product_types as $product_type) {
       $permissions[] = "create {$product_type} commerce_product";
+      $permissions[] = "view {$product_type} commerce_product";
       $permissions[] = "update own {$product_type} commerce_product";
       $permissions[] = "delete own {$product_type} commerce_product";
+    }
+
+    // Add crud permissions for all existing product variation types.
+    foreach ($variation_types as $variation_type) {
+      $permissions[] = "manage {$variation_type} commerce_product_variation";
     }
 
     $role->set('permissions', array_unique($permissions));
