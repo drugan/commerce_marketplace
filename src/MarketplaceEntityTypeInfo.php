@@ -68,6 +68,14 @@ class MarketplaceEntityTypeInfo implements ContainerInjectionInterface {
         'weight' => -100,
         'url' => $url->fromRoute($route, $route_parameters, $options),
       ];
+      $route = 'view.commerce_marketplace_store_orders.orders_page';
+      $route_parameters = $url->getRouteParameters();
+      $options = $url->getOptions();
+      $operations['marketplace_orders'] = [
+        'title' => $this->t('Orders'),
+        'weight' => -99,
+        'url' => $url->fromRoute($route, $route_parameters, $options),
+      ];
 
       return $operations;
     }

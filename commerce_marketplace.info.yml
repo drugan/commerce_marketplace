@@ -24,5 +24,6 @@ config_devel:
     - field.formatter.settings.commerce_marketplace_list_compact
     - views.view.commerce_marketplace_administer_stores
     - views.view.commerce_marketplace_administer_products
+    - views.view.commerce_marketplace_store_orders
   optional:
     - commerce_marketplace.settings

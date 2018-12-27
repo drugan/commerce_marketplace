@@ -109,6 +109,7 @@ function commerce_marketplace_uninstall() {
     'system.action.commerce_marketplace_clear_store_type_limit',
     'views.view.commerce_marketplace_administer_stores',
     'views.view.commerce_marketplace_administer_products',
+    'views.view.commerce_marketplace_store_orders',
   ];
 
   foreach ($configurations as $name) {
