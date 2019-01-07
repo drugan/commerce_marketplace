@@ -17,6 +17,7 @@ use Drupal\commerce_marketplace\Form\MarketplaceAddToCartForm;
 use Drupal\commerce_marketplace\MarketplaceAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceEntityPermissionProvider;
 use Drupal\commerce_marketplace\MarketplaceTypeAccessControlHandler;
+use Drupal\commerce_marketplace\MarketplaceProductVariationAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceProductAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceCurrencyAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceProductTypeAccessControlHandler;
@@ -75,12 +76,12 @@ function commerce_marketplace_entity_type_alter(array &$entity_types) {
   $entity_types['commerce_product']->setFormClass('default', MarketplaceProductForm::class);
   $entity_types['commerce_product']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
   $entity_types['commerce_product']->setAccessClass(MarketplaceProductAccessControlHandler::class);
+  $entity_types['commerce_product_variation']->setAccessClass(MarketplaceProductVariationAccessControlHandler::class);
   $entity_types['commerce_product_type']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
   $entity_types['commerce_product_type']->setAccessClass(MarketplaceProductTypeAccessControlHandler::class);
   $entity_types['commerce_currency']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
   $entity_types['commerce_currency']->setAccessClass(MarketplaceCurrencyAccessControlHandler::class);
   $entity_types['commerce_order_item']->setFormClass('add_to_cart', MarketplaceAddToCartForm::class);
-
 }
 
 /**
