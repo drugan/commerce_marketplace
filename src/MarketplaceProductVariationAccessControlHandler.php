@@ -6,11 +6,34 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\commerce_product\ProductVariationAccessControlHandler;
+use Drupal\commerce_product\Entity\Product;
 
 /**
  * Overrides an access control handler for product variations.
  */
 class MarketplaceProductVariationAccessControlHandler extends ProductVariationAccessControlHandler {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
+    $result = AccessResult::allowedIfHasPermission($account, $this->entityType->getAdminPermission());
+    if ($result->isAllowed()) {
+      return $result;
+    }
+    $result = AccessResult::allowedIfHasPermission($account, "manage $entity_bundle commerce_product_variation");
+    $parts = explode('/', \Drupal::request()->getRequestUri());
+    if (isset($parts[1]) && $parts[1] == 'product' && !empty($parts[2])) {
+      if ($result->isAllowed() && (Product::load($parts[2])->getOwnerId() == $account->id())) {
+        return $result;
+      }
+      else {
+        return AccessResult::forbidden();
+      }
+    }
+
+    return $result;
+  }
 
   /**
    * {@inheritdoc}
