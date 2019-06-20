@@ -6,7 +6,6 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\commerce_product\ProductVariationAccessControlHandler;
-use Drupal\commerce_product\Entity\Product;
 
 /**
  * Overrides an access control handler for product variations.
@@ -22,9 +21,8 @@ class MarketplaceProductVariationAccessControlHandler extends ProductVariationAc
       return $result;
     }
     $result = AccessResult::allowedIfHasPermission($account, "manage $entity_bundle commerce_product_variation");
-    $parts = explode('/', \Drupal::request()->getRequestUri());
-    if (isset($parts[1]) && $parts[1] == 'product' && !empty($parts[2])) {
-      if ($result->isAllowed() && (Product::load($parts[2])->getOwnerId() == $account->id())) {
+    if ($product = \Drupal::request()->attributes->get('commerce_product')) {
+      if ($result->isAllowed() && ($product->getOwnerId() == $account->id())) {
         return $result;
       }
       else {
