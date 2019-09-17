@@ -1,0 +1,7 @@
+.toolbar-bar .toolbar-icon-commerce-marketplace-admin:active:before,
+.toolbar-bar .toolbar-icon-commerce-marketplace-admin:before,
+.toolbar-tray .toolbar-icon.toolbar-icon-commerce-marketplace-admin:before,
+.toolbar-tray .toolbar-icon.toolbar-icon-commerce-marketplace-admin:active:before,
+.toolbar-tray .toolbar-icon.toolbar-icon-commerce-marketplace-admin.is-active:before {
+  background-image: url("../icons/marketplace.svg");
+}

@@ -1,3 +1,10 @@
+commerce_marketplace.admin:
+  path: '/admin/marketplace'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Marketplace'
+  requirements:
+    _permission: 'access commerce administration pages'
 commerce_cart.page:
   path: '/cart'
   defaults:

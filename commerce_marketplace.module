@@ -59,6 +59,13 @@ function commerce_marketplace_theme() {
 }
 
 /**
+ * Implements hook_toolbar_alter().
+ */
+function commerce_marketplace_toolbar_alter(&$items) {
+  $items['administration']['#attached']['library'][] = 'commerce_marketplace/toolbar';
+}
+
+/**
  * Implements hook_entity_type_alter().
  */
 function commerce_marketplace_entity_type_alter(array &$entity_types) {

@@ -3,3 +3,9 @@ marketplace_default:
   css:
     theme:
       css/commerce_marketplace.theme.css: {}
+
+toolbar:
+  version: VERSION
+  css:
+    theme:
+      css/commerce_marketplace.icons.css: {}

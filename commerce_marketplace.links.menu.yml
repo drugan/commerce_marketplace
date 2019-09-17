@@ -1,0 +1,6 @@
+commerce_marketplace.admin:
+  title: 'Marketplace'
+  route_name: 'commerce_marketplace.admin'
+  parent: 'system.admin'
+  description: 'Administer and configure Marketplace stores.'
+  weight: -9
