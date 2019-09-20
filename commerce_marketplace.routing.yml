@@ -5,6 +5,41 @@ commerce_marketplace.admin:
     _title: 'Marketplace'
   requirements:
     _permission: 'access commerce administration pages'
+
+commerce_marketplace.taxonomy.commerce:
+  path: '/admin/marketplace/taxonomy/commerce'
+  defaults:
+    _controller: '\Drupal\commerce_marketplace\Controller\MarketplaceEntityListController::listing'
+    entity_type: 'taxonomy_vocabulary'
+    args:
+      starts_with:
+        - 'commerce_'
+  requirements:
+    _permission: 'access taxonomy overview+administer taxonomy'
+
+commerce_marketplace.taxonomy.special:
+  path: '/admin/marketplace/taxonomy/special'
+  defaults:
+    _controller: '\Drupal\commerce_marketplace\Controller\MarketplaceEntityListController::listing'
+    entity_type: 'taxonomy_vocabulary'
+    args:
+      starts_with:
+        - 'special_'
+  requirements:
+    _permission: 'access taxonomy overview+administer taxonomy'
+
+entity.taxonomy_vocabulary.collection:
+  path: '/admin/structure/taxonomy'
+  defaults:
+    _controller: '\Drupal\commerce_marketplace\Controller\MarketplaceEntityListController::listing'
+    entity_type: 'taxonomy_vocabulary'
+    args:
+      not_starts_with:
+        - 'commerce_'
+        - 'special_'
+  requirements:
+    _permission: 'access taxonomy overview+administer taxonomy'
+
 commerce_cart.page:
   path: '/cart'
   defaults:

@@ -4,3 +4,17 @@ commerce_marketplace.admin:
   parent: 'system.admin'
   description: 'Administer and configure Marketplace stores.'
   weight: -9
+
+commerce_marketplace.taxonomy.commerce:
+  title: 'Taxonomy Commerce'
+  route_name: 'commerce_marketplace.taxonomy.commerce'
+  parent: 'commerce_marketplace.admin'
+  description: 'Administer and configure "commerce_" prefixed vocabularies.'
+  weight: 10
+
+commerce_marketplace.taxonomy.special:
+  title: 'Taxonomy Special'
+  route_name: 'commerce_marketplace.taxonomy.special'
+  parent: 'commerce_marketplace.admin'
+  description: 'Administer and configure "special_" prefixed vocabularies.'
+  weight: 11

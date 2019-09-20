@@ -10,6 +10,12 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\commerce_store\Entity\StoreInterface;
 use Drupal\commerce_marketplace\MarketplaceStorage;
+use Drupal\commerce_marketplace\MarketplaceVocabularyListBuilder;
+use Drupal\commerce_marketplace\MarketplaceNodeTypeListBuilder;
+use Drupal\commerce_marketplace\MarketplaceProfileTypeListBuilder;
+use Drupal\commerce_marketplace\MarketplaceProductTypeListBuilder;
+use Drupal\commerce_marketplace\MarketplaceVariationTypeListBuilder;
+use Drupal\commerce_marketplace\MarketplaceOrderItemTypeListBuilder;
 use Drupal\commerce_marketplace\Form\MarketplaceForm;
 use Drupal\commerce_marketplace\MarketplaceEntityTypeInfo;
 use Drupal\commerce_marketplace\Form\MarketplaceProductForm;
@@ -89,6 +95,12 @@ function commerce_marketplace_entity_type_alter(array &$entity_types) {
   $entity_types['commerce_currency']->setHandlerClass('permission_provider', MarketplaceEntityPermissionProvider::class);
   $entity_types['commerce_currency']->setAccessClass(MarketplaceCurrencyAccessControlHandler::class);
   $entity_types['commerce_order_item']->setFormClass('add_to_cart', MarketplaceAddToCartForm::class);
+  $entity_types['taxonomy_vocabulary']->setHandlerClass('list_builder', MarketplaceVocabularyListBuilder::class);
+  $entity_types['node_type']->setHandlerClass('list_builder', MarketplaceNodeTypeListBuilder::class);
+  $entity_types['profile_type']->setHandlerClass('list_builder', MarketplaceProfileTypeListBuilder::class);
+  $entity_types['commerce_product_type']->setHandlerClass('list_builder', MarketplaceProductTypeListBuilder::class);
+  $entity_types['commerce_order_item_type']->setHandlerClass('list_builder', MarketplaceOrderItemTypeListBuilder::class);
+  $entity_types['commerce_product_variation_type']->setHandlerClass('list_builder', MarketplaceVariationTypeListBuilder::class);
 }
 
 /**
@@ -201,5 +213,30 @@ function commerce_marketplace_entity_operation(EntityInterface $entity) {
     return \Drupal::service('class_resolver')
       ->getInstanceFromDefinition(MarketplaceEntityTypeInfo::class)
       ->entityOperation($entity);
+  }
+}
+
+/**
+ * Implements hook_menu_links_discovered_alter().
+ */
+function commerce_marketplace_menu_links_discovered_alter(&$links) {
+  $router = \Drupal::service('router.route_provider');
+  $routes = [
+    'commerce_marketplace.taxonomy.commerce' => 'entity.taxonomy_vocabulary.overview_form.',
+    'commerce_marketplace.taxonomy.special' => 'entity.taxonomy_vocabulary.overview_form.',
+  ];
+  foreach ($routes as $route => $orig) {
+    array_walk($links, function (&$link, $key) use ($route, $orig, $router) {
+      if (strpos($key, $orig) === 0) {
+        $args = $router->getRouteByName($route)->getDefault('args');
+        if (!empty($args['starts_with'])) {
+          foreach ($args['starts_with'] as $start) {
+            if (strpos($key, "{$orig}{$start}") === 0) {
+              $link['parent'] = $route;
+            }
+          }
+        }
+      }
+    });
   }
 }
