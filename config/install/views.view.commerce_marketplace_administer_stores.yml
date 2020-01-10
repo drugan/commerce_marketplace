@@ -2,7 +2,6 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.commerce_product.variations
     - user.role.administrator
     - user.role.commerce_marketplace_admin
     - user.role.commerce_marketplace_owner
@@ -19,7 +18,6 @@ description: 'Extends default commerce Stores view allowing to administer an ind
 tag: Commerce
 base_table: commerce_store_field_data
 base_field: store_id
-core: 8.x
 display:
   default:
     display_plugin: default
@@ -487,6 +485,8 @@ display:
               administrator: '0'
             reduce: false
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1089,6 +1089,8 @@ display:
               administrator: '0'
             reduce: false
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1131,6 +1133,8 @@ display:
               seller: '0'
               store_owner: '0'
               administrator: '0'
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -1169,6 +1173,8 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: true
           group_info:
             label: Published
@@ -1400,8 +1406,7 @@ display:
         - url
         - url.query_args
         - user.roles
-      tags:
-        - 'config:field.storage.commerce_product.variations'
+      tags: {  }
   stores_page:
     display_plugin: page
     id: stores_page
@@ -2093,6 +2098,8 @@ display:
               commerce_marketplace_owner: '0'
             reduce: false
             hide_single_bundle: true
+            operator_limit_selection: false
+            operator_list: {  }
           is_grouped: false
           group_info:
             label: ''
@@ -2870,3 +2877,4 @@ display:
       cacheable: false
       max-age: 0
       tags: {  }
+
