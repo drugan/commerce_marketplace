@@ -36,13 +36,13 @@ class MarketplaceNameFormatter extends StringFormatter {
 
     if ($items->getEntity() instanceof StoreInterface) {
       $config = \Drupal::configFactory()->get('commerce_store.settings');
-      $default_store = $config->get('default_store');
       $global = $this->t('Global default store');
       $owner = $this->t('Owner default store');
       $config = \Drupal::configFactory()->get('commerce_marketplace.settings');
       foreach ($items as $delta => $item) {
-        $settings = [];
         $uuid = $item->getEntity()->uuid();
+        $default_store = $item->getEntity()->isDefault() ? $uuid : FALSE;
+        $settings = [];
         if ($uuid == $default_store) {
           $settings['global'] = $global;
         }

@@ -7,6 +7,7 @@ dependencies:
   - commerce:commerce_product
   - commerce:commerce_cart
   - commerce:commerce_tax
+  - commerce:commerce_store (>=8.x-2.16)
 config_devel:
   install:
     - user.role.commerce_marketplace_owner
