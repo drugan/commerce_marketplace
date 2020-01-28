@@ -55,11 +55,13 @@ class MarketplaceForm extends StoreForm {
           '#type' => 'number',
           '#step' => 1,
           '#min' => 0,
-          '#weight' => $form['uid']['#weight'] + 1,
           '#title' => t('The maximum stores'),
           '#description' => t('Override the number of stores of this type allowed to create by the current store owner. Leave 0 to inherit the store type limit (@limit).', ['@limit' => $limit[$entity_type] ?: $this->t('Unlimited')]),
           '#default_value' => $limit[$uid] ?: 0,
         ];
+        if (isset($form['uid'])) {
+          $form['marketplace_limit']['#weight'] = $form['uid']['#weight'] + 1;
+        }
       }
     }
     else {
@@ -80,13 +82,18 @@ class MarketplaceForm extends StoreForm {
   public function save(array $form, FormStateInterface $form_state) {
     $storage = $this->entityTypeManager->getStorage('commerce_store');
     if (isset($form['marketplace_limit'])) {
-      $uid = $form['uid']['widget']['0']['target_id']['#default_value']->id();
+      if ($uid_field = isset($form['uid']['widget']['0']['target_id']['#default_value'])) {
+        $uid = $form['uid']['widget']['0']['target_id']['#default_value']->id();
+      }
+      else {
+        $uid = $this->entity->getOwnerId();
+      }
       $marketplace_limit = $form_state->getValue('marketplace_limit');
       $store_type = $this->entity->bundle();
       /** @var \Drupal\commerce_marketplace\StoreStorageInterface $storage */
 
       // Owner is changed, so clear limits if they have only one store type.
-      if ($uid != $form_state->getValue('uid')[0]['target_id']) {
+      if ($uid_field && $uid != $form_state->getValue('uid')[0]['target_id']) {
         $stores = count($storage->getQuery()
           ->condition('uid', $uid)
           ->condition('type', $store_type)->execute());
