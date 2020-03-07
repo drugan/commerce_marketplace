@@ -92,7 +92,7 @@ class MarketplaceStorage extends StoreStorage {
       $ids = parent::getQuery()->execute();
     }
 
-    if ($ids) {
+    if (!empty($ids)) {
       $stores = parent::loadMultiple($ids);
       if ($uuid) {
         foreach ($stores as $store) {
