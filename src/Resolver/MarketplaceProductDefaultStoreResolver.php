@@ -3,7 +3,7 @@
 namespace Drupal\commerce_marketplace\Resolver;
 
 use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\commerce_product\Entity\ProductInterface;
 use Drupal\commerce_store\Resolver\StoreResolverInterface;
 
@@ -14,12 +14,13 @@ use Drupal\commerce_store\Resolver\StoreResolverInterface;
  * product.
  */
 class MarketplaceProductDefaultStoreResolver implements StoreResolverInterface {
+
   /**
-   * The entity manager.
+   * The entity type manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The route match.
@@ -36,9 +37,9 @@ class MarketplaceProductDefaultStoreResolver implements StoreResolverInterface {
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The enttiy manager.
    */
-  public function __construct(RouteMatchInterface $route_match, EntityManagerInterface $entity_manager) {
+  public function __construct(RouteMatchInterface $route_match, EntityTypeManagerInterface $entity_type_manager) {
     $this->routeMatch = $route_match;
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -47,7 +48,7 @@ class MarketplaceProductDefaultStoreResolver implements StoreResolverInterface {
   public function resolve() {
     $product = $this->routeMatch->getParameter('commerce_product');
     if ($product instanceof ProductInterface) {
-      $storage = $this->entityManager->getStorage('commerce_store');
+      $storage = $this->entityTypeManager->getStorage('commerce_store');
       // The default store specific for this particular product owner. To return
       // all the stores belonging to the owner, do this:
       // $stores = $storage->loadMultiple(NULL, $product->getOwner());
