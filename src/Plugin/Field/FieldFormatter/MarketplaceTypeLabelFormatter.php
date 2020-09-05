@@ -2,6 +2,7 @@
 
 namespace Drupal\commerce_marketplace\Plugin\Field\FieldFormatter;
 
+use Drupal\user\UserInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\commerce_store\Entity\StoreInterface;
@@ -78,7 +79,7 @@ class MarketplaceTypeLabelFormatter extends EntityReferenceLabelFormatter {
       $admin_permission = $store->getEntityType()->getAdminPermission();
       $owner_is_admin = $owner->hasPermission($admin_permission);
       if ($this->currentUserAdmin === NULL) {
-        $current_uid = $store->getCurrentUserId()[0];
+        $current_uid = \Drupal::currentUser()->id();
         $this->currentUserAdmin = $owner->load($current_uid)->hasPermission($admin_permission);
       }
       if (!isset($this->limits[$uid][$store_type])) {
