@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\user\Entity\Role;
+
 /**
  * @file
  * Install and uninstall functions for the commerce_marketplace module.
@@ -31,7 +33,7 @@ function commerce_marketplace_install() {
   $product_types = array_keys($entity_manager->getStorage('commerce_product_type')->loadMultiple());
   $variation_types = array_keys($entity_manager->getStorage('commerce_product_variation_type')->loadMultiple());
 
-  if ($role = user_role_load('commerce_marketplace_owner')) {
+  if ($role = Role::load('commerce_marketplace_owner')) {
     $permissions = $role->getPermissions();
     // Add crud permissions for all existing store types.
     foreach ($store_types as $store_type) {
@@ -59,7 +61,7 @@ function commerce_marketplace_install() {
   }
 
   // Add marketplace owner permissions to admin's permissions.
-  if ($role && $admin_role = user_role_load('commerce_marketplace_admin')) {
+  if ($role && $admin_role = Role::load('commerce_marketplace_admin')) {
     $permissions = $admin_role->getPermissions();
     $owner_permissions = $role->getPermissions();
 
@@ -85,10 +87,10 @@ function commerce_marketplace_install() {
  */
 function commerce_marketplace_uninstall() {
   // Make some clean up after ourselves.
-  if ($role = user_role_load('commerce_marketplace_owner')) {
+  if ($role = Role::load('commerce_marketplace_owner')) {
     $role->delete();
   }
-  if ($role = user_role_load('commerce_marketplace_admin')) {
+  if ($role = Role::load('commerce_marketplace_admin')) {
     $role->delete();
   }
 
