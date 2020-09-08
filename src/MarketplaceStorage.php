@@ -16,11 +16,14 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\commerce_store\Entity\StoreInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\Core\Messenger\MessengerTrait;
 
 /**
  * Overrides the store storage class.
  */
 class MarketplaceStorage extends StoreStorage {
+
+  use MessengerTrait;
 
   /**
    * The config factory.
@@ -116,7 +119,7 @@ class MarketplaceStorage extends StoreStorage {
       $default = $store;
       $default->enforceIsNew();
       if (count($stores) > 1) {
-        drupal_set_message(t('No one default store is assigned yet. Note that it is recommended to have one explicitly assigned otherwise the last found store will be dimmed as the default. This may lead to unexpected behaviour.'), 'warning', FALSE);
+        $this->messenger()->addWarning(t('No one default store is assigned yet. Note that it is recommended to have one explicitly assigned otherwise the last found store will be dimmed as the default. This may lead to unexpected behaviour.'), FALSE);
       }
     }
     elseif (!$default && $stores) {

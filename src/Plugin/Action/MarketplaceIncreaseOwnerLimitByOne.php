@@ -37,7 +37,7 @@ class MarketplaceIncreaseOwnerLimitByOne extends ActionBase {
       if ($owner_is_admin) {
         $name = $owner->getUsername();
         $msg = $this->t('The store type limit cannot be set for the %name because they have admin permission and should not have any limits.', ['%name' => $name]);
-        drupal_set_message($msg, 'warning', FALSE);
+        $this->messenger()->addWarning($msg, FALSE);
       }
       elseif (!isset($limits[$uid][$store_type])) {
         $limit = $storage->getStoreLimit($store_type, $uid);

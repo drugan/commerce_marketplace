@@ -36,7 +36,7 @@ class MarketplaceMarkAsOwnerDefault extends ActionBase {
       if ($owner_is_admin) {
         $name = $owner->getUsername();
         $msg = $this->t('The %name store cannot be set as owner default because they have admin permission and should use a global default store.', ['%name' => $name]);
-        drupal_set_message($msg, 'warning', FALSE);
+        $this->messenger()->addWarning($msg, FALSE);
       }
       elseif (!isset($owners[$uid])) {
         if ($config->get("owners.{$uid}.default_store") != $uuid) {
