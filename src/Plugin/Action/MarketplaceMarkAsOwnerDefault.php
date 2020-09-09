@@ -34,7 +34,7 @@ class MarketplaceMarkAsOwnerDefault extends ActionBase {
       $uuid = $store->uuid();
 
       if ($owner_is_admin) {
-        $name = $owner->getUsername();
+        $name = $owner->getDisplayName();
         $msg = $this->t('The %name store cannot be set as owner default because they have admin permission and should use a global default store.', ['%name' => $name]);
         $this->messenger()->addWarning($msg, FALSE);
       }

@@ -28,7 +28,7 @@ function commerce_marketplace_install() {
     }
   }
 
-  $entity_manager = \Drupal::entityManager();
+  $entity_manager = \Drupal::entityTypeManager();
   $store_types = array_keys($entity_manager->getStorage('commerce_store_type')->loadMultiple());
   $product_types = array_keys($entity_manager->getStorage('commerce_product_type')->loadMultiple());
   $variation_types = array_keys($entity_manager->getStorage('commerce_product_variation_type')->loadMultiple());

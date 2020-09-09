@@ -142,7 +142,7 @@ function commerce_marketplace_local_tasks_alter(&$local_tasks) {
 function commerce_marketplace_form_commerce_store_type_form_alter(array &$form, FormStateInterface $form_state) {
   /** @var \Drupal\commerce_store\Entity\StoreTypeInterface $store_type */
   $store_type = $form_state->getFormObject()->getEntity();
-  $storage = \Drupal::entityManager()->getStorage('commerce_store');
+  $storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
 
   $form['marketplace_limit'] = [
     '#type' => 'number',
@@ -166,7 +166,7 @@ function commerce_marketplace_commerce_store_type_form_submit(array $form, FormS
   }
   /** @var \Drupal\commerce_store\Entity\StoreTypeInterface $store_type */
   $store_type = $form_state->getFormObject()->getEntity();
-  $storage = \Drupal::entityManager()->getStorage('commerce_store');
+  $storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
   $storage->setStoreLimit($store_type->id(), $limit ?: 0);
 }
 
@@ -175,7 +175,7 @@ function commerce_marketplace_commerce_store_type_form_submit(array $form, FormS
  */
 function commerce_marketplace_entity_delete(EntityInterface $entity) {
   if ($entity instanceof StoreInterface) {
-    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
     $store_type = [
       'delete' => TRUE,
       'store_type' => $entity->bundle(),
@@ -183,7 +183,7 @@ function commerce_marketplace_entity_delete(EntityInterface $entity) {
     $storage->clearStoreLimit($store_type, $entity->getOwnerId());
   }
   elseif ($entity instanceof AccountInterface) {
-    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
     $store_type = [
       'delete' => TRUE,
     ];
@@ -196,7 +196,7 @@ function commerce_marketplace_entity_delete(EntityInterface $entity) {
  */
 function commerce_marketplace_commerce_store_type_delete(EntityInterface $entity) {
   if ($store_type = $entity->id()) {
-    $storage = \Drupal::entityManager()->getStorage('commerce_store');
+    $storage = \Drupal::entityTypeManager()->getStorage('commerce_store');
     $store_type = [
       'delete' => TRUE,
       'store_type' => $store_type,

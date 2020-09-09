@@ -1,7 +1,7 @@
 name: Commerce Marketplace
 type: module
 description: Implements multiple stores/store owners model.
-core: 8.x
+core_version_requirement: ^8 || ^9
 package: Commerce (contrib)
 dependencies:
   - commerce:commerce_product

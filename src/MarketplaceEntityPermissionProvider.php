@@ -2,7 +2,7 @@
 
 namespace Drupal\commerce_marketplace;
 
-use Drupal\commerce\EntityPermissionProvider;
+use Drupal\entity\EntityPermissionProvider;
 
 /**
  * Provides Commerce Marketplace entity permissions.
