@@ -15,7 +15,7 @@ class MarketplaceProductForm extends ProductForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $storage = $this->entityManager->getStorage('commerce_store');
+    $storage = $this->entityTypeManager->getStorage('commerce_store');
 
     // Stores owned by the current user are counted or all stores available if the
     // user is admin.
