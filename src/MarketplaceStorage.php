@@ -209,8 +209,8 @@ class MarketplaceStorage extends StoreStorage {
     if (!$store_type) {
       return $config->getRawData();
     }
-    $limit = $config->get("store_types.{$store_type}.limit");
-    $limit[$store_type] = $limit ?: 0;
+    $store_limit = $config->get("store_types.{$store_type}.limit");
+    $limit[$store_type] = $store_limit ?: 0;
     if ($uid) {
       $uid_limit = $config->get("owners.{$uid}.store_types.{$store_type}.limit");
       $limit[$uid] = $uid_limit ?: 0;
