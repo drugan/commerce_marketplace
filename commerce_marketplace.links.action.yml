@@ -9,3 +9,9 @@ view.commerce_marketplace_store_products.add_page:
   title: 'Add product'
   appears_on:
     - view.commerce_marketplace_administer_stores.products_page
+
+view.commerce_marketplace_store_shipping_methods.add_page:
+  route_name: entity.commerce_shipping_method.add_form
+  title: 'Add shipping method'
+  appears_on:
+    - view.commerce_marketpplace_administer_shipping_methods.methods_page

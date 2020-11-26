@@ -7,6 +7,8 @@ use Drupal\user\Entity\Role;
  * Install and uninstall functions for the commerce_marketplace module.
  */
 
+use Drupal\Component\Serialization\Yaml;
+
 /**
  * Implements hook_install().
  */
@@ -112,6 +114,7 @@ function commerce_marketplace_uninstall() {
     'views.view.commerce_marketplace_administer_stores',
     'views.view.commerce_marketplace_administer_products',
     'views.view.commerce_marketplace_store_orders',
+    'views.view.commerce_marketpplace_administer_shipping_methods',
   ];
 
   foreach ($configurations as $name) {
@@ -132,6 +135,22 @@ function commerce_marketplace_uninstall() {
         $view->set('status', TRUE);
         $view->save();
       }
+    }
+  }
+}
+
+/**
+ * Install Administer Store Shipping Methods view.
+ */
+function commerce_marketplace_update_8201() {
+  $config = \Drupal::configFactory();
+  $configurations = [
+    'views.view.commerce_marketpplace_administer_shipping_methods',
+  ];
+  foreach ($configurations as $name) {
+    if ($configuration = $config->getEditable($name)) {
+      $data = Yaml::decode(file_get_contents(__DIR__ . "/config/install/{$name}.yml"));
+      $configuration->setData($data)->save();
     }
   }
 }

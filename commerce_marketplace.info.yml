@@ -27,5 +27,6 @@ config_devel:
     - views.view.commerce_marketplace_administer_stores
     - views.view.commerce_marketplace_administer_products
     - views.view.commerce_marketplace_store_orders
+    - views.view.commerce_marketpplace_administer_shipping_methods
   optional:
     - commerce_marketplace.settings

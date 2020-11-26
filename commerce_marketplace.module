@@ -28,6 +28,7 @@ use Drupal\commerce_marketplace\MarketplaceProductAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceCurrencyAccessControlHandler;
 use Drupal\commerce_marketplace\MarketplaceProductTypeAccessControlHandler;
 use Drupal\commerce_marketplace\Plugin\views\argument_default\MarketplaceUser;
+use Drupal\commerce_marketplace\MarketplaceShippingMethodAccessControlHandler;
 
 /**
  * Implements hook_help().
@@ -101,6 +102,9 @@ function commerce_marketplace_entity_type_alter(array &$entity_types) {
   $entity_types['commerce_product_type']->setHandlerClass('list_builder', MarketplaceProductTypeListBuilder::class);
   $entity_types['commerce_order_item_type']->setHandlerClass('list_builder', MarketplaceOrderItemTypeListBuilder::class);
   $entity_types['commerce_product_variation_type']->setHandlerClass('list_builder', MarketplaceVariationTypeListBuilder::class);
+  if (isset($entity_types['commerce_shipping_method'])) {
+    $entity_types['commerce_shipping_method']->setAccessClass(MarketplaceShippingMethodAccessControlHandler::class);
+  }
 }
 
 /**
