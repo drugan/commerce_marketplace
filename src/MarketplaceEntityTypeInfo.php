@@ -76,7 +76,7 @@ class MarketplaceEntityTypeInfo implements ContainerInjectionInterface {
         'weight' => -99,
         'url' => $url->fromRoute($route, $route_parameters, $options),
       ];
-      $route = 'view.commerce_marketpplace_administer_shipping_methods.methods_page';
+      $route = 'view.commerce_marketplace_administer_shipping_methods.methods_page';
       $route_parameters = $url->getRouteParameters();
       $options = $url->getOptions();
       $operations['marketplace_shipping_methods'] = [

@@ -114,7 +114,7 @@ function commerce_marketplace_uninstall() {
     'views.view.commerce_marketplace_administer_stores',
     'views.view.commerce_marketplace_administer_products',
     'views.view.commerce_marketplace_store_orders',
-    'views.view.commerce_marketpplace_administer_shipping_methods',
+    'views.view.commerce_marketplace_administer_shipping_methods',
   ];
 
   foreach ($configurations as $name) {
@@ -145,7 +145,7 @@ function commerce_marketplace_uninstall() {
 function commerce_marketplace_update_8201() {
   $config = \Drupal::configFactory();
   $configurations = [
-    'views.view.commerce_marketpplace_administer_shipping_methods',
+    'views.view.commerce_marketplace_administer_shipping_methods',
   ];
   foreach ($configurations as $name) {
     if ($configuration = $config->getEditable($name)) {
