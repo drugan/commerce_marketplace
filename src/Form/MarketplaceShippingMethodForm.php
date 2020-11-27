@@ -16,11 +16,12 @@ class MarketplaceShippingMethodForm extends ShippingMethodForm {
   public function save(array $form, FormStateInterface $form_state) {
     $this->entity->save();
     $this->messenger()->addMessage($this->t('Saved the %label shipping method.', ['%label' => $this->entity->label()]));
-    $store = $form_state->getValue(['stores', 'target_id']);
+    $stores = (array) $form_state->getValue(['stores', 'target_id']);
     $admin = $this->getEntity()->getEntityType()->getAdminPermission();
-    if (is_numeric($store) && !$this->currentUser()->hasPermission($admin)) {
+
+    if ((count($stores) == 1) && !$this->currentUser()->hasPermission($admin)) {
       $form_state->setRedirect('view.commerce_marketplace_administer_shipping_methods.methods_page', [
-        'commerce_store' => $store,
+        'commerce_store' => reset($stores),
       ]);
     }
     else {
