@@ -19,10 +19,17 @@ class MarketplaceShippingMethodForm extends ShippingMethodForm {
     $stores = (array) $form_state->getValue(['stores', 'target_id']);
     $admin = $this->getEntity()->getEntityType()->getAdminPermission();
 
-    if ((count($stores) == 1) && !$this->currentUser()->hasPermission($admin)) {
-      $form_state->setRedirect('view.commerce_marketplace_administer_shipping_methods.methods_page', [
-        'commerce_store' => reset($stores),
-      ]);
+    if (!$this->currentUser()->hasPermission($admin)) {
+      if (count($stores) == 1) {
+        $form_state->setRedirect('view.commerce_marketplace_administer_shipping_methods.methods_page', [
+          'commerce_store' => reset($stores),
+        ]);
+      }
+      else {
+        $form_state->setRedirect('view.commerce_marketplace_administer_stores.user_stores_page', [
+          'user' => $this->currentUser()->id(),
+        ]);
+      }
     }
     else {
      $form_state->setRedirect('entity.commerce_shipping_method.collection');
